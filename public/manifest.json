@@ -1,0 +1,26 @@
+{
+  "name": "OPTIMAL",
+  "short_name": "OPTIMAL",
+  "description": "Tu centro de fitness y fisioterapia en Barberà del Vallès",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#161616",
+  "theme_color": "#161616",
+  "categories": ["health", "fitness"],
+  "icons": [
+    {
+      "src": "/avatar-negative.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/avatar-negative.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
