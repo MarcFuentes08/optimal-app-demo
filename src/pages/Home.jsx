@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Progress from './Progress'
 
 function getFormattedDate() {
   const d = new Date()
@@ -163,6 +164,7 @@ function NutricionSheet({ onClose }) {
 export default function Home({ onNavigate }) {
   const [animateBars, setAnimateBars] = useState(false)
   const [showNutricion, setShowNutricion] = useState(false)
+  const [showProgress, setShowProgress] = useState(false)
 
   useEffect(() => {
     const t = setTimeout(() => setAnimateBars(true), 300)
@@ -267,7 +269,10 @@ export default function Home({ onNavigate }) {
               <span className="text-sm font-medium text-trust-gray">Nutrición</span>
             </button>
 
-            <button className="flex flex-col items-center gap-2 rounded-xl bg-[#1E1E1E] p-4 active:scale-[0.97] transition-transform">
+            <button
+              onClick={() => setShowProgress(true)}
+              className="flex flex-col items-center gap-2 rounded-xl bg-[#1E1E1E] p-4 active:scale-[0.97] transition-transform"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-yellow-snap">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
               </svg>
@@ -361,6 +366,9 @@ export default function Home({ onNavigate }) {
 
       {/* Nutrición bottom sheet */}
       {showNutricion && <NutricionSheet onClose={() => setShowNutricion(false)} />}
+
+      {/* Progress bottom sheet */}
+      {showProgress && <Progress onClose={() => setShowProgress(false)} />}
     </div>
   )
 }
