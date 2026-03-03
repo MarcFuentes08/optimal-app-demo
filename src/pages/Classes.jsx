@@ -115,12 +115,19 @@ function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    requestAnimationFrame(() => setVisible(true))
+    document.body.style.overflow = 'hidden'
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
+    return () => { document.body.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
-    setTimeout(onClose, 300)
+    setTimeout(() => {
+      document.body.style.overflow = ''
+      onClose()
+    }, 300)
   }
 
   const endTime = (() => {
@@ -130,86 +137,87 @@ function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
   })()
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <>
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
+        className={`fixed inset-0 z-[59] bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
         onClick={handleClose}
       />
+
+      {/* Side panel */}
       <div
-        className={`relative z-10 w-full max-w-lg rounded-t-2xl border-t border-white/10 bg-core-black px-5 pb-8 pt-4 transition-transform duration-300 ease-out ${
-          visible ? 'translate-y-0' : 'translate-y-full'
+        className={`fixed top-0 right-0 bottom-0 z-[60] flex w-[85vw] max-w-[360px] flex-col bg-core-black border-l border-white/10 transition-transform duration-300 ease-out ${
+          visible ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Drag indicator */}
-        <div className="mb-3 flex justify-center">
-          <div className="h-1 w-10 rounded-full bg-white/15" />
-        </div>
-
         {/* Header */}
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold text-trust-gray">{cls.name}</h2>
+            <h2 className="text-xl font-bold text-trust-gray">{cls.name}</h2>
             <IntensityTag level={intensity[cls.name]} />
           </div>
           <button onClick={handleClose} className="p-1 text-human-gray active:scale-90 transition-transform">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
 
-        {/* Description */}
-        <p className="mt-3 text-sm leading-relaxed text-human-gray">
-          {descriptions[cls.name]}
-        </p>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-5 py-4" style={{ overscrollBehavior: 'contain' }}>
+          {/* Description */}
+          <p className="text-sm leading-relaxed text-human-gray">
+            {descriptions[cls.name]}
+          </p>
 
-        {/* Session info */}
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <div className="rounded-xl bg-[#1E1E1E] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Hora</p>
-            <p className="mt-0.5 text-sm font-semibold text-trust-gray">{cls.time} — {endTime}</p>
-          </div>
-          <div className="rounded-xl bg-[#1E1E1E] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Duración</p>
-            <p className="mt-0.5 text-sm font-semibold text-trust-gray">60 minutos</p>
-          </div>
-          <div className="rounded-xl bg-[#1E1E1E] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Entrenador</p>
-            <p className="mt-0.5 text-sm font-semibold text-trust-gray">Luis</p>
-          </div>
-          <div className="rounded-xl bg-[#1E1E1E] p-3">
-            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Plazas</p>
-            <div className="mt-0.5">
-              <SpotsIndicator spots={cls.spots} max={cls.max} />
+          {/* Session info */}
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="rounded-xl bg-[#1E1E1E] p-3">
+              <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Hora</p>
+              <p className="mt-0.5 text-sm font-semibold text-trust-gray">{cls.time} — {endTime}</p>
+            </div>
+            <div className="rounded-xl bg-[#1E1E1E] p-3">
+              <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Duración</p>
+              <p className="mt-0.5 text-sm font-semibold text-trust-gray">60 minutos</p>
+            </div>
+            <div className="rounded-xl bg-[#1E1E1E] p-3">
+              <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Entrenador</p>
+              <p className="mt-0.5 text-sm font-semibold text-trust-gray">Luis</p>
+            </div>
+            <div className="rounded-xl bg-[#1E1E1E] p-3">
+              <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Plazas</p>
+              <div className="mt-0.5">
+                <SpotsIndicator spots={cls.spots} max={cls.max} />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Reserve button */}
-        <div className="mt-5">
-          {isFull ? (
-            <button className="w-full rounded-xl border border-orange-fun py-3 text-sm font-semibold text-orange-fun active:scale-[0.97] transition-transform">
-              Apuntarme a lista de espera
-            </button>
-          ) : isReserved ? (
-            <button
-              onClick={onReserve}
-              className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
-            >
-              ✓ Reservado — Cancelar reserva
-            </button>
-          ) : (
-            <button
-              onClick={onReserve}
-              className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
-            >
-              Reservar plaza
-            </button>
-          )}
+          {/* Reserve button */}
+          <div className="mt-5">
+            {isFull ? (
+              <button className="w-full rounded-xl border border-orange-fun py-3 text-sm font-semibold text-orange-fun active:scale-[0.97] transition-transform">
+                Apuntarme a lista de espera
+              </button>
+            ) : isReserved ? (
+              <button
+                onClick={onReserve}
+                className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
+              >
+                ✓ Reservado — Cancelar reserva
+              </button>
+            ) : (
+              <button
+                onClick={onReserve}
+                className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
+              >
+                Reservar plaza
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

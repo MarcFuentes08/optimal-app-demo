@@ -115,51 +115,66 @@ function NutricionSheet({ onClose }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    requestAnimationFrame(() => setVisible(true))
+    document.body.style.overflow = 'hidden'
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
+    return () => { document.body.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
-    setTimeout(onClose, 300)
+    setTimeout(() => {
+      document.body.style.overflow = ''
+      onClose()
+    }, 300)
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <>
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${visible ? 'opacity-50' : 'opacity-0'}`}
+        className={`fixed inset-0 z-[59] bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
         onClick={handleClose}
       />
+
+      {/* Side panel */}
       <div
-        className={`relative z-10 w-full max-w-lg rounded-t-2xl border-t border-white/10 bg-core-black px-5 pb-8 pt-5 transition-transform duration-300 ease-out ${
-          visible ? 'translate-y-0' : 'translate-y-full'
+        className={`fixed top-0 right-0 bottom-0 z-[60] flex w-[85vw] max-w-[360px] flex-col bg-core-black border-l border-white/10 transition-transform duration-300 ease-out ${
+          visible ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <button onClick={handleClose} className="absolute right-4 top-4 p-1 text-human-gray">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
-
-        <h2 className="text-lg font-semibold text-trust-gray">Tu Nutrición</h2>
-
-        <div className="mt-4 rounded-xl bg-[#1E1E1E] p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-human-gray">Plan activo</p>
-          <p className="mt-1 font-medium text-trust-gray">Definición — Semana 4</p>
-          <p className="mt-3 text-sm text-human-gray">📋 Última dieta enviada: 28 feb 2026</p>
+        {/* Header */}
+        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-white/10">
+          <h2 className="text-xl font-semibold text-trust-gray">Tu Nutrición</h2>
+          <button onClick={handleClose} className="p-1 text-human-gray active:scale-90 transition-transform">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         </div>
 
-        <a
-          href="https://wa.me/34613007915?text=Hola%20Pau,%20tengo%20una%20consulta%20sobre%20mi%20plan%20nutricional"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
-        >
-          <WhatsAppIcon />
-          Contactar con Pau
-        </a>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-5 py-4" style={{ overscrollBehavior: 'contain' }}>
+          <div className="rounded-xl bg-[#1E1E1E] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-human-gray">Plan activo</p>
+            <p className="mt-1 font-medium text-trust-gray">Definición — Semana 4</p>
+            <p className="mt-3 text-sm text-human-gray">📋 Última dieta enviada: 28 feb 2026</p>
+          </div>
+
+          <a
+            href="https://wa.me/34613007915?text=Hola%20Pau,%20tengo%20una%20consulta%20sobre%20mi%20plan%20nutricional"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
+          >
+            <WhatsAppIcon />
+            Contactar con Pau
+          </a>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

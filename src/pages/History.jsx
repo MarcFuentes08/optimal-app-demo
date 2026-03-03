@@ -82,38 +82,40 @@ export default function History({ onClose }) {
   const [monthIdx, setMonthIdx] = useState(0)
 
   useEffect(() => {
-    requestAnimationFrame(() => setVisible(true))
+    document.body.style.overflow = 'hidden'
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
+    return () => { document.body.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
-    setTimeout(onClose, 300)
+    setTimeout(() => {
+      document.body.style.overflow = ''
+      onClose()
+    }, 300)
   }
 
   const month = months[monthIdx]
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
-      {/* Backdrop */}
+    <>
+      {/* Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
+        className={`fixed inset-0 z-[59] bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
         onClick={handleClose}
       />
 
-      {/* Sheet */}
+      {/* Side panel */}
       <div
-        className={`relative z-10 flex h-[95dvh] w-full max-w-lg flex-col rounded-t-2xl border-t border-white/10 bg-core-black transition-transform duration-300 ease-out ${
-          visible ? 'translate-y-0' : 'translate-y-full'
+        className={`fixed top-0 right-0 bottom-0 z-[60] flex w-[85vw] max-w-[360px] flex-col bg-core-black border-l border-white/10 transition-transform duration-300 ease-out ${
+          visible ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Drag indicator */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="h-1 w-10 rounded-full bg-white/15" />
-        </div>
-
         {/* Header */}
-        <div className="flex items-start justify-between px-5 pt-2">
-          <h2 className="text-2xl font-semibold text-trust-gray">Historial</h2>
+        <div className="flex items-start justify-between px-5 pt-5 pb-3 border-b border-white/10">
+          <h2 className="text-xl font-semibold text-trust-gray">Historial</h2>
           <button onClick={handleClose} className="p-1 text-human-gray active:scale-90 transition-transform">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -159,7 +161,7 @@ export default function History({ onClose }) {
         </div>
 
         {/* Scrollable content */}
-        <div className="mt-4 flex-1 overflow-y-auto px-5 pb-10">
+        <div className="mt-4 flex-1 overflow-y-auto px-5 pb-10" style={{ overscrollBehavior: 'contain' }}>
           {month.weeks.map((week) => (
             <div key={week.label} className="mb-5">
               {/* Week separator */}
@@ -199,6 +201,6 @@ export default function History({ onClose }) {
           ))}
         </div>
       </div>
-    </div>
+    </>
   )
 }
