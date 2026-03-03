@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 const schedule = {
   1: [
@@ -42,6 +42,13 @@ const intensity = {
   Strong: 'alta',
   Functional: 'media',
   Hybrid: 'media',
+}
+
+const descriptions = {
+  OpTraining: 'CrossTraining a nuestra manera. Entreno de alta intensidad combinando fuerza, cardio y técnica en formato grupal. Cada día es diferente.',
+  Functional: 'Entrenamiento funcional enfocado en movimientos naturales del cuerpo. Ideal para mejorar movilidad, estabilidad y fuerza general.',
+  Strong: 'Sesión de fuerza pura con barras y mancuernas. Progresión de cargas controlada. Para quienes buscan ganar fuerza real.',
+  Hybrid: 'Lo mejor de dos mundos: combina trabajo funcional con bloques de fuerza. Versátil y adaptable a cualquier nivel.',
 }
 
 const dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
@@ -103,12 +110,115 @@ function IntensityTag({ level }) {
   )
 }
 
+function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    requestAnimationFrame(() => setVisible(true))
+  }, [])
+
+  function handleClose() {
+    setVisible(false)
+    setTimeout(onClose, 300)
+  }
+
+  const endTime = (() => {
+    const [h, m] = cls.time.split(':').map(Number)
+    const end = new Date(0, 0, 0, h, m + 60)
+    return end.toTimeString().slice(0, 5)
+  })()
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center">
+      <div
+        className={`absolute inset-0 bg-black transition-opacity duration-300 ${visible ? 'opacity-60' : 'opacity-0'}`}
+        onClick={handleClose}
+      />
+      <div
+        className={`relative z-10 w-full max-w-lg rounded-t-2xl border-t border-white/10 bg-core-black px-5 pb-8 pt-4 transition-transform duration-300 ease-out ${
+          visible ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
+        {/* Drag indicator */}
+        <div className="mb-3 flex justify-center">
+          <div className="h-1 w-10 rounded-full bg-white/15" />
+        </div>
+
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-trust-gray">{cls.name}</h2>
+            <IntensityTag level={intensity[cls.name]} />
+          </div>
+          <button onClick={handleClose} className="p-1 text-human-gray active:scale-90 transition-transform">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Description */}
+        <p className="mt-3 text-sm leading-relaxed text-human-gray">
+          {descriptions[cls.name]}
+        </p>
+
+        {/* Session info */}
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-[#1E1E1E] p-3">
+            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Hora</p>
+            <p className="mt-0.5 text-sm font-semibold text-trust-gray">{cls.time} — {endTime}</p>
+          </div>
+          <div className="rounded-xl bg-[#1E1E1E] p-3">
+            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Duración</p>
+            <p className="mt-0.5 text-sm font-semibold text-trust-gray">60 minutos</p>
+          </div>
+          <div className="rounded-xl bg-[#1E1E1E] p-3">
+            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Entrenador</p>
+            <p className="mt-0.5 text-sm font-semibold text-trust-gray">Luis</p>
+          </div>
+          <div className="rounded-xl bg-[#1E1E1E] p-3">
+            <p className="text-[10px] uppercase tracking-wider text-human-gray/60">Plazas</p>
+            <div className="mt-0.5">
+              <SpotsIndicator spots={cls.spots} max={cls.max} />
+            </div>
+          </div>
+        </div>
+
+        {/* Reserve button */}
+        <div className="mt-5">
+          {isFull ? (
+            <button className="w-full rounded-xl border border-orange-fun py-3 text-sm font-semibold text-orange-fun active:scale-[0.97] transition-transform">
+              Apuntarme a lista de espera
+            </button>
+          ) : isReserved ? (
+            <button
+              onClick={onReserve}
+              className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
+            >
+              ✓ Reservado — Cancelar reserva
+            </button>
+          ) : (
+            <button
+              onClick={onReserve}
+              className="w-full rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
+            >
+              Reservar plaza
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Classes() {
   const weekDays = useMemo(getWeekDays, [])
   const todayDow = weekDays.find((d) => d.isToday)?.dayOfWeek ?? 1
   const [selectedDay, setSelectedDay] = useState(todayDow)
   const [reserved, setReserved] = useState({})
   const [staggerKey, setStaggerKey] = useState(0)
+  const [detailClass, setDetailClass] = useState(null)
 
   const classes = schedule[selectedDay] || []
 
@@ -169,22 +279,25 @@ export default function Classes() {
               className="animate-card-in flex items-center gap-4 rounded-xl bg-[#1E1E1E] p-4"
               style={{ animationDelay: `${i * 60}ms` }}
             >
-              {/* Time */}
-              <div className="w-14 shrink-0">
-                <span className="text-2xl font-bold text-trust-gray">{cls.time}</span>
-              </div>
-
-              {/* Info */}
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-trust-gray">{cls.name}</span>
-                  <IntensityTag level={intensity[cls.name]} />
+              {/* Time + Info (clickable area) */}
+              <button
+                onClick={() => setDetailClass(cls)}
+                className="flex min-w-0 flex-1 items-center gap-4 text-left active:opacity-70 transition-opacity"
+              >
+                <div className="w-14 shrink-0">
+                  <span className="text-2xl font-bold text-trust-gray">{cls.time}</span>
                 </div>
-                <p className="mt-0.5 text-sm text-human-gray">Luis</p>
-                <div className="mt-1">
-                  <SpotsIndicator spots={cls.spots} max={cls.max} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-trust-gray">{cls.name}</span>
+                    <IntensityTag level={intensity[cls.name]} />
+                  </div>
+                  <p className="mt-0.5 text-sm text-human-gray">Luis</p>
+                  <div className="mt-1">
+                    <SpotsIndicator spots={cls.spots} max={cls.max} />
+                  </div>
                 </div>
-              </div>
+              </button>
 
               {/* Button */}
               <div className="shrink-0">
@@ -212,6 +325,17 @@ export default function Classes() {
           )
         })}
       </div>
+
+      {/* Class detail sheet */}
+      {detailClass && (
+        <ClassDetail
+          cls={detailClass}
+          isReserved={reserved[`${selectedDay}-${detailClass.time}`]}
+          isFull={detailClass.spots === 0}
+          onReserve={() => toggleReserve(`${selectedDay}-${detailClass.time}`)}
+          onClose={() => setDetailClass(null)}
+        />
+      )}
     </div>
   )
 }

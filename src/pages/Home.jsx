@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Progress from './Progress'
+import Notifications from './Notifications'
 
 function getFormattedDate() {
   const d = new Date()
@@ -165,6 +166,8 @@ export default function Home({ onNavigate }) {
   const [animateBars, setAnimateBars] = useState(false)
   const [showNutricion, setShowNutricion] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [hasUnread, setHasUnread] = useState(true)
 
   useEffect(() => {
     const t = setTimeout(() => setAnimateBars(true), 300)
@@ -182,14 +185,16 @@ export default function Home({ onNavigate }) {
           </h1>
           <p className="mt-0.5 text-sm text-human-gray">{getFormattedDate()}</p>
         </div>
-        <button className="relative mt-1 p-1">
+        <button onClick={() => setShowNotifications(true)} className="relative mt-1 p-1 active:scale-90 transition-transform">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6 text-trust-gray">
             <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
             <path d="M13.73 21a2 2 0 01-3.46 0" />
           </svg>
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-pulse text-[9px] font-bold text-white">
-            2
-          </span>
+          {hasUnread && (
+            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-pulse text-[9px] font-bold text-white">
+              2
+            </span>
+          )}
         </button>
       </header>
 
@@ -369,6 +374,14 @@ export default function Home({ onNavigate }) {
 
       {/* Progress bottom sheet */}
       {showProgress && <Progress onClose={() => setShowProgress(false)} />}
+
+      {/* Notifications bottom sheet */}
+      {showNotifications && (
+        <Notifications
+          onClose={() => setShowNotifications(false)}
+          onMarkRead={() => setHasUnread(false)}
+        />
+      )}
     </div>
   )
 }

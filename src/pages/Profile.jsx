@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Progress from './Progress'
 import Bonos from './Bonos'
 import Appointments from './Appointments'
+import Notifications from './Notifications'
+import History from './History'
 
 const stats = [
   { value: '12', label: 'Sesiones' },
@@ -63,6 +65,7 @@ const menuItems = [
   },
   {
     label: 'Historial',
+    action: 'history',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
         <circle cx="12" cy="12" r="10" />
@@ -72,6 +75,7 @@ const menuItems = [
   },
   {
     label: 'Notificaciones',
+    action: 'notifications',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
         <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -100,6 +104,8 @@ export default function Profile() {
   const [showProgress, setShowProgress] = useState(false)
   const [showBonos, setShowBonos] = useState(false)
   const [showAppointments, setShowAppointments] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
 
   return (
     <div className="min-h-full pb-28">
@@ -132,6 +138,8 @@ export default function Profile() {
                 if (item.action === 'progress') setShowProgress(true)
                 if (item.action === 'bonos') setShowBonos(true)
                 if (item.action === 'appointments') setShowAppointments(true)
+                if (item.action === 'notifications') setShowNotifications(true)
+                if (item.action === 'history') setShowHistory(true)
               }}
               className={`flex w-full items-center gap-4 px-4 py-3.5 active:scale-[0.98] active:bg-white/5 transition-all ${
                 i !== menuItems.length - 1 ? 'border-b border-white/5' : ''
@@ -161,6 +169,12 @@ export default function Profile() {
 
       {/* Appointments bottom sheet */}
       {showAppointments && <Appointments onClose={() => setShowAppointments(false)} />}
+
+      {/* Notifications bottom sheet */}
+      {showNotifications && <Notifications onClose={() => setShowNotifications(false)} />}
+
+      {/* History bottom sheet */}
+      {showHistory && <History onClose={() => setShowHistory(false)} />}
     </div>
   )
 }
