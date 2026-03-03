@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import Progress from './Progress'
+import Bonos from './Bonos'
+import Appointments from './Appointments'
 
 const stats = [
   { value: '12', label: 'Sesiones' },
@@ -10,6 +12,7 @@ const stats = [
 const menuItems = [
   {
     label: 'Mis Citas',
+    action: 'appointments',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
         <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -50,6 +53,7 @@ const menuItems = [
   },
   {
     label: 'Mis Bonos',
+    action: 'bonos',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
         <rect x="2" y="5" width="20" height="14" rx="2" />
@@ -94,6 +98,8 @@ const Chevron = () => (
 
 export default function Profile() {
   const [showProgress, setShowProgress] = useState(false)
+  const [showBonos, setShowBonos] = useState(false)
+  const [showAppointments, setShowAppointments] = useState(false)
 
   return (
     <div className="min-h-full pb-28">
@@ -122,7 +128,11 @@ export default function Profile() {
           {menuItems.map((item, i) => (
             <button
               key={item.label}
-              onClick={() => item.action === 'progress' && setShowProgress(true)}
+              onClick={() => {
+                if (item.action === 'progress') setShowProgress(true)
+                if (item.action === 'bonos') setShowBonos(true)
+                if (item.action === 'appointments') setShowAppointments(true)
+              }}
               className={`flex w-full items-center gap-4 px-4 py-3.5 active:scale-[0.98] active:bg-white/5 transition-all ${
                 i !== menuItems.length - 1 ? 'border-b border-white/5' : ''
               }`}
@@ -145,6 +155,12 @@ export default function Profile() {
 
       {/* Progress bottom sheet */}
       {showProgress && <Progress onClose={() => setShowProgress(false)} />}
+
+      {/* Bonos bottom sheet */}
+      {showBonos && <Bonos onClose={() => setShowBonos(false)} />}
+
+      {/* Appointments bottom sheet */}
+      {showAppointments && <Appointments onClose={() => setShowAppointments(false)} />}
     </div>
   )
 }

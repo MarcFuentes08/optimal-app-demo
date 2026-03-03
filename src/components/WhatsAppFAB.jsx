@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 const contacts = [
   {
     name: 'Luis — Entreno',
-    href: 'https://wa.me/34XXXXXXXXX?text=Hola%20Luis,%20quiero%20reservar%20una%20sesión%20de%20entrenamiento',
+    href: 'https://wa.me/34613015102?text=Hola%20Luis,%20quiero%20reservar%20una%20sesión%20de%20entrenamiento',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
         <path d="M6.5 6.5a2 2 0 00-2 0L3 7.5v9l1.5 1a2 2 0 002 0L8 16.5v-9L6.5 6.5z" />
@@ -14,7 +14,7 @@ const contacts = [
   },
   {
     name: 'Andreu — Fisio',
-    href: 'https://wa.me/34XXXXXXXXX?text=Hola%20Andreu,%20me%20gustaría%20reservar%20una%20sesión%20de%20fisioterapia',
+    href: 'https://wa.me/34606728257?text=Hola%20Andreu,%20me%20gustaría%20reservar%20una%20sesión%20de%20fisioterapia',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
         <path d="M18 8a4 4 0 00-8 0c0 3.5 4 7 4 7s4-3.5 4-7z" />
@@ -24,7 +24,7 @@ const contacts = [
   },
   {
     name: 'Pau — Nutri',
-    href: 'https://wa.me/34XXXXXXXXX?text=Hola%20Pau,%20me%20gustaría%20información%20sobre%20nutrición',
+    href: 'https://wa.me/34613007915?text=Hola%20Pau,%20me%20gustaría%20información%20sobre%20nutrición',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
         <path d="M12 2c-3 7-7 9-7 14a7 7 0 0014 0c0-5-4-7-7-14z" />

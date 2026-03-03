@@ -34,8 +34,8 @@ const servicios = [
     description: 'Tratamiento manual especializado para dolor, lesiones y recuperación.',
     professional: 'Andreu — Fisioterapeuta',
     btnLabel: 'Pedir cita',
-    whatsapp: 'https://wa.me/34XXXXXXXXX?text=Hola%20Andreu,%20me%20gustaría%20reservar%20una%20sesión%20de%20fisioterapia',
-    phone: 'tel:+34XXXXXXXXX',
+    whatsapp: 'https://wa.me/34606728257?text=Hola%20Andreu,%20me%20gustaría%20reservar%20una%20sesión%20de%20fisioterapia',
+    phone: 'tel:+34606728257',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8">
         <path d="M18 8a4 4 0 00-8 0c0 3.5 4 7 4 7s4-3.5 4-7z" />
@@ -50,8 +50,8 @@ const servicios = [
     description: 'Vuelve a tu nivel deportivo con un plan personalizado post-lesión.',
     professional: 'Andreu — Especialista en readaptación',
     btnLabel: 'Más info',
-    whatsapp: 'https://wa.me/34XXXXXXXXX?text=Hola%20Andreu,%20me%20interesa%20el%20servicio%20de%20readaptación',
-    phone: 'tel:+34XXXXXXXXX',
+    whatsapp: 'https://wa.me/34606728257?text=Hola%20Andreu,%20me%20interesa%20el%20servicio%20de%20readaptación',
+    phone: 'tel:+34606728257',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8">
         <circle cx="12" cy="5" r="2.5" />
@@ -69,8 +69,8 @@ const servicios = [
     description: 'Planes nutricionales adaptados a tu entrenamiento y objetivos.',
     professional: 'Pau — Nutricionista',
     btnLabel: 'Consultar',
-    whatsapp: 'https://wa.me/34XXXXXXXXX?text=Hola%20Pau,%20me%20gustaría%20información%20sobre%20nutrición',
-    phone: 'tel:+34XXXXXXXXX',
+    whatsapp: 'https://wa.me/34613007915?text=Hola%20Pau,%20me%20gustaría%20información%20sobre%20nutrición',
+    phone: 'tel:+34613007915',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8">
         <path d="M12 2c-3 7-7 9-7 14a7 7 0 0014 0c0-5-4-7-7-14z" />
@@ -85,8 +85,8 @@ const servicios = [
     description: 'Sesiones 1:1 o en grupo reducido, adaptadas a tu nivel y objetivos.',
     professional: 'Luis — Entrenador personal',
     btnLabel: 'Reservar',
-    whatsapp: 'https://wa.me/34XXXXXXXXX?text=Hola%20Luis,%20quiero%20reservar%20una%20sesión%20de%20entrenamiento',
-    phone: 'tel:+34XXXXXXXXX',
+    whatsapp: 'https://wa.me/34613015102?text=Hola%20Luis,%20quiero%20reservar%20una%20sesión%20de%20entrenamiento',
+    phone: 'tel:+34613015102',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8">
         <path d="M6.5 6.5a2 2 0 00-2 0L3 7.5v9l1.5 1a2 2 0 002 0L8 16.5v-9L6.5 6.5z" />
@@ -148,7 +148,7 @@ function NutricionSheet({ onClose }) {
         </div>
 
         <a
-          href="https://wa.me/34XXXXXXXXX?text=Hola%20Pau,%20tengo%20una%20consulta%20sobre%20mi%20plan%20nutricional"
+          href="https://wa.me/34613007915?text=Hola%20Pau,%20tengo%20una%20consulta%20sobre%20mi%20plan%20nutricional"
           target="_blank"
           rel="noopener noreferrer"
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-snap py-3 text-sm font-semibold text-core-black active:scale-[0.97] transition-transform"
