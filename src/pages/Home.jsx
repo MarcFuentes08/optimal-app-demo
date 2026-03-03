@@ -180,9 +180,8 @@ export default function Home({ onNavigate }) {
     <PullToRefresh>
     <div className="min-h-full pb-28">
       {/* Header */}
-      <header className="sticky top-0 z-30 flex items-start justify-between bg-core-black px-5 pb-4 pt-4">
+      <header className="sticky top-0 z-30 flex items-center justify-between bg-core-black px-5 pb-5 pt-5">
         <div>
-          <img src="/logo-trust-gray.png" alt="OPTIMAL" width="120" height="28" className="mb-2 h-7 w-auto" />
           <h1 className="text-2xl font-semibold text-trust-gray">
             Hola, Carlos 👋
           </h1>
@@ -201,7 +200,7 @@ export default function Home({ onNavigate }) {
         </button>
       </header>
 
-      <div className="flex flex-col gap-6 px-5">
+      <div className="mt-2 flex flex-col gap-6 px-5">
         {/* Próxima sesión */}
         <section>
           <div className="overflow-hidden rounded-2xl bg-[#1E1E1E] border-l-[3px] border-yellow-snap p-4">
