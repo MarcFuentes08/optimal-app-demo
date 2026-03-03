@@ -56,17 +56,22 @@ export default function App() {
   const showFAB = activeTab === 'home' || activeTab === 'profile'
 
   return (
-    <div className="min-h-full bg-core-black font-body text-trust-gray">
+    <div className="flex h-full flex-col bg-core-black font-body text-trust-gray">
       {showOnboarding && <Onboarding onFinish={handleOnboardingFinish} />}
       {!showOnboarding && showSplash && <SplashScreen onFinish={handleSplashFinish} />}
-      <div className="mx-auto max-w-lg">
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <div key={activeTab} className="animate-page-in">
-            <Page onNavigate={handleTabChange} />
-          </div>
-        )}
+      <div
+        className="flex-1 overflow-y-auto"
+        style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
+      >
+        <div className="mx-auto max-w-lg">
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <div key={activeTab} className="animate-page-in">
+              <Page onNavigate={handleTabChange} />
+            </div>
+          )}
+        </div>
       </div>
       {showFAB && <WhatsAppFAB />}
       <TabBar activeTab={activeTab} onTabChange={handleTabChange} />

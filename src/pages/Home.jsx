@@ -176,6 +176,7 @@ export default function Home({ onNavigate }) {
   }, [])
 
   return (
+    <>
     <PullToRefresh>
     <div className="min-h-full pb-28">
       {/* Header */}
@@ -371,20 +372,18 @@ export default function Home({ onNavigate }) {
         </section>
       </div>
 
-      {/* Nutrición bottom sheet */}
-      {showNutricion && <NutricionSheet onClose={() => setShowNutricion(false)} />}
-
-      {/* Progress bottom sheet */}
-      {showProgress && <Progress onClose={() => setShowProgress(false)} />}
-
-      {/* Notifications bottom sheet */}
-      {showNotifications && (
-        <Notifications
-          onClose={() => setShowNotifications(false)}
-          onMarkRead={() => setHasUnread(false)}
-        />
-      )}
     </div>
     </PullToRefresh>
+
+    {/* Bottom sheets — outside PullToRefresh so fixed positioning works */}
+    {showNutricion && <NutricionSheet onClose={() => setShowNutricion(false)} />}
+    {showProgress && <Progress onClose={() => setShowProgress(false)} />}
+    {showNotifications && (
+      <Notifications
+        onClose={() => setShowNotifications(false)}
+        onMarkRead={() => setHasUnread(false)}
+      />
+    )}
+    </>
   )
 }

@@ -81,7 +81,9 @@ export default function Notifications({ onClose, onMarkRead }) {
   const [notifications, setNotifications] = useState(initialNotifications)
 
   useEffect(() => {
-    requestAnimationFrame(() => setVisible(true))
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setVisible(true))
+    })
   }, [])
 
   function handleClose() {

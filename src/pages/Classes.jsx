@@ -233,6 +233,7 @@ export default function Classes() {
   }
 
   return (
+    <>
     <PullToRefresh>
     <div className="min-h-full pb-28">
       {/* Header */}
@@ -344,16 +345,19 @@ export default function Classes() {
       </div>
 
       {/* Class detail sheet */}
-      {detailClass && (
-        <ClassDetail
-          cls={detailClass}
-          isReserved={reserved[`${selectedDay}-${detailClass.time}`]}
-          isFull={detailClass.spots === 0}
-          onReserve={() => toggleReserve(`${selectedDay}-${detailClass.time}`)}
-          onClose={() => setDetailClass(null)}
-        />
-      )}
     </div>
     </PullToRefresh>
+
+    {/* Class detail — outside PullToRefresh so fixed positioning works */}
+    {detailClass && (
+      <ClassDetail
+        cls={detailClass}
+        isReserved={reserved[`${selectedDay}-${detailClass.time}`]}
+        isFull={detailClass.spots === 0}
+        onReserve={() => toggleReserve(`${selectedDay}-${detailClass.time}`)}
+        onClose={() => setDetailClass(null)}
+      />
+    )}
+    </>
   )
 }
