@@ -60,6 +60,7 @@ export default function App() {
       {showOnboarding && <Onboarding onFinish={handleOnboardingFinish} />}
       {!showOnboarding && showSplash && <SplashScreen onFinish={handleSplashFinish} />}
       <div
+        id="scroll-container"
         className="flex-1 overflow-y-auto"
         style={{ WebkitOverflowScrolling: 'touch', overscrollBehavior: 'contain' }}
       >

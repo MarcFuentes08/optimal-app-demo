@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import PullToRefresh from '../components/PullToRefresh'
 
 const schedule = {
@@ -115,17 +116,19 @@ function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
-    return () => { document.body.style.overflow = '' }
+    return () => { if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
@@ -136,7 +139,7 @@ function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
     return end.toTimeString().slice(0, 5)
   })()
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -217,7 +220,8 @@ function ClassDetail({ cls, isReserved, isFull, onReserve, onClose }) {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const upcoming = [
   {
@@ -117,24 +118,26 @@ export default function Appointments({ onClose }) {
   const [tab, setTab] = useState('upcoming')
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
-    return () => { document.body.style.overflow = '' }
+    return () => { if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
 
   const citas = tab === 'upcoming' ? upcoming : past
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -199,6 +202,7 @@ export default function Appointments({ onClose }) {
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }

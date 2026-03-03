@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const weeklyData = [4, 3, 5, 4, 2, 5, 3, 4]
 const maxSessions = Math.max(...weeklyData)
@@ -22,23 +23,25 @@ export default function Progress({ onClose }) {
   const [animateBars, setAnimateBars] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
     const t = setTimeout(() => setAnimateBars(true), 400)
-    return () => { clearTimeout(t); document.body.style.overflow = '' }
+    return () => { clearTimeout(t); if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -200,6 +203,7 @@ export default function Progress({ onClose }) {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }

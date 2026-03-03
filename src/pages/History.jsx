@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const months = [
   {
@@ -82,24 +83,26 @@ export default function History({ onClose }) {
   const [monthIdx, setMonthIdx] = useState(0)
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
-    return () => { document.body.style.overflow = '' }
+    return () => { if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
 
   const month = months[monthIdx]
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -201,6 +204,7 @@ export default function History({ onClose }) {
           ))}
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }

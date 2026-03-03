@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Progress from './Progress'
 import Notifications from './Notifications'
 import PullToRefresh from '../components/PullToRefresh'
@@ -115,22 +116,24 @@ function NutricionSheet({ onClose }) {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
-    return () => { document.body.style.overflow = '' }
+    return () => { if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -174,7 +177,8 @@ function NutricionSheet({ onClose }) {
           </a>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
 

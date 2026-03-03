@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const initialNotifications = [
   {
@@ -81,17 +82,19 @@ export default function Notifications({ onClose, onMarkRead }) {
   const [notifications, setNotifications] = useState(initialNotifications)
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden'
+    const sc = document.getElementById('scroll-container')
+    if (sc) sc.style.overflow = 'hidden'
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true))
     })
-    return () => { document.body.style.overflow = '' }
+    return () => { if (sc) sc.style.overflow = '' }
   }, [])
 
   function handleClose() {
     setVisible(false)
     setTimeout(() => {
-      document.body.style.overflow = ''
+      const sc = document.getElementById('scroll-container')
+      if (sc) sc.style.overflow = ''
       onClose()
     }, 300)
   }
@@ -109,7 +112,7 @@ export default function Notifications({ onClose, onMarkRead }) {
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
-  return (
+  return createPortal(
     <>
       {/* Overlay */}
       <div
@@ -181,6 +184,7 @@ export default function Notifications({ onClose, onMarkRead }) {
           </div>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   )
 }
