@@ -40,7 +40,7 @@ Demo interactiva mobile-first de la futura app del cliente de OPTIMAL, un centro
 Los archivos de logo están en `/public/`:
 - `logo-trust-gray.png` → Logo completo (símbolo + OPTIMAL) en Trust Gray — **PARA FONDO OSCURO**
 - `logo-core-black.png` → Logo completo en Core Black — **PARA FONDO CLARO**
-- `avatar-negative.png` → Solo símbolo en Trust Gray — **PARA FONDO OSCURO (splash, app icon)**
+- `avatar-negative.png` → Solo símbolo en Trust Gray — **PARA FONDO OSCURO (splash, onboarding, app icon)**
 - `avatar-positive.png` → Solo símbolo en Core Black — **PARA FONDO CLARO**
 - `imago-trust-gray.png` → Solo texto "OPTIMAL" en Trust Gray
 - `imago-core-black.png` → Solo texto "OPTIMAL" en Core Black
@@ -55,137 +55,170 @@ El símbolo es un círculo superpuesto a un cuadrado con un arco de separación.
 - Tagline: "Human approach. To sport, to life."
 - Tono: cercano pero profesional, nunca corporativo frío.
 
-## Estructura de la app — 4 pantallas + splash
+## Flujo de la app
 
-### Splash Screen
+Onboarding (3 slides, solo primera vez) → Splash Screen → Home
+
+El onboarding se guarda en localStorage (`optimal_onboarding_seen`). Una vez visto, la app abre directamente con el splash.
+
+## Estructura de la app — 4 tabs + bottom sheets
+
+### Onboarding (src/components/Onboarding.jsx)
+- 3 slides con swipe/botón: Bienvenida, Features, Equipo
+- Dots indicator, botón "Saltar", "Empezar" en último slide
+- Se muestra solo la primera vez (localStorage)
+
+### Splash Screen (src/components/SplashScreen.jsx)
 - Fondo Core Black (#161616)
 - Logo avatar-negative.png centrado con animación de entrada (scale + fade)
-- Debajo: texto "OPTIMAL" o usar logo-trust-gray.png
+- Tagline "Human approach. To sport, to life."
 - Duración: ~2 segundos, luego transición suave al Home
-- Opcional: tagline "Human approach. To sport, to life." debajo en Human Gray
 
-### Tab Bar (navegación inferior)
-- Fondo: Core Black con borde superior sutil (1px rgba white 0.08)
+### Tab Bar (src/components/TabBar.jsx)
+- Fondo: Core Black con borde superior sutil
 - 4 tabs: Inicio, Clases, Entreno, Perfil
-- Tab activo: icono en Yellow Snap + label en Yellow Snap
-- Tab inactivo: icono en Human Gray + label en Human Gray
+- Tab activo: Yellow Snap. Tab inactivo: Human Gray
+- Haptic feedback visual al tocar (scale 0.85 + opacity)
 - Safe area bottom para móviles con notch
-- Efecto haptic visual al tocar (scale 0.95 momentáneo)
 
-### Pantalla 1: INICIO (Home)
+### Pantalla 1: INICIO (src/pages/Home.jsx)
 
 **Header:**
-- Saludo: "Hola, Carlos 👋" (texto grande, Trust Gray)
-- Subtítulo: fecha actual formateada en español ("Lunes, 3 de marzo")
-- Icono de campana (notificaciones) a la derecha con badge rojo
+- Saludo: "Hola, Carlos 👋" (text-2xl, Trust Gray)
+- Subtítulo: fecha actual formateada en español
+- Icono campana a la derecha → abre Notificaciones (badge rojo dinámico)
 
-**Próxima sesión (card destacada):**
-- Card con borde izquierdo Yellow Snap o fondo sutil
-- Servicio: "Entrenamiento Personal"
-- Hora: "Hoy, 17:30h"
-- Profesional: "Luis"
-- Ubicación: "OPTIMAL — Barberà del Vallès"
-- Iconos pequeños para cada dato (reloj, persona, ubicación)
+**Próxima sesión:** Card con borde izquierdo Yellow Snap, datos de la sesión.
 
 **Accesos rápidos (grid 2×2):**
 - Reservar Clase → navega a tab Clases
 - Mi Entreno → navega a tab Entreno
-- Nutrición → (solo visual, no navega)
-- Progreso → (solo visual, no navega)
-- Cada card: icono + texto, fondo #1E1E1E o similar oscuro, bordes redondeados
+- Nutrición → abre bottom sheet de Nutrición (contacto con Pau por WhatsApp)
+- Progreso → abre bottom sheet de Progreso
 
-**Bonos activos:**
-- Card por cada bono activo del usuario demo
-- Ejemplo: "Entrenamiento 1h" — "5/8 sesiones" con barra de progreso
-- Barra: fondo Human Gray, relleno Yellow Snap, animada al montar
-- Segundo bono ejemplo: "Nutrición" — "2/3 sesiones"
+**Bonos activos:** Barras de progreso animadas Yellow Snap.
 
-**Novedades del centro:**
-- 1-2 cards tipo aviso
-- Ejemplo: "🔥 Nuevos horarios OpTraining" con fecha
-- Ejemplo: "Descubre nuestro servicio de Nutrición deportiva"
+**Nuestros Servicios:** Cards de Fisioterapia, Readaptación, Nutrición, Entrenamiento con botones de WhatsApp y teléfono (datos reales).
 
-### Pantalla 2: CLASES GRUPALES (sustituye Aimharder)
+**Novedades del centro:** Cards informativas.
 
-**Selector de día:**
-- Fila horizontal de días: Lun, Mar, Mié, Jue, Vie, Sáb
-- Día seleccionado: fondo Yellow Snap, texto Core Black
-- Otros días: fondo transparente, texto Trust Gray
-- Hoy tiene un punto indicator debajo
+**Pull to refresh:** Simulado con spinner Yellow Snap (1s).
 
-**Listado de clases del día seleccionado:**
-- Cada clase es una card con:
-  - Nombre de la clase (OpTraining, Functional, Strong, Hybrid)
-  - Hora (ej: "07:00")
-  - Entrenador: "Luis"
-  - Plazas: "3/14 plazas" con indicador visual (verde si hay, naranja si pocas, rojo si llena)
-  - Botón "Reservar" → al tocar cambia a "✓ Reservado" con fondo Yellow Snap
-  - Si plazas = 0: texto "Completa" + botón "Lista de espera" en Orange Fun
-- Animación stagger al cambiar de día (las cards aparecen secuencialmente)
+### Pantalla 2: CLASES GRUPALES (src/pages/Classes.jsx)
 
-**Tipos de clase (datos reales del centro):**
-- **OpTraining**: CrossTraining a nuestra manera (intensidad alta)
-- **Functional**: Entrenamiento funcional (intensidad media)
-- **Strong**: Fuerza pura (intensidad alta)
-- **Hybrid**: Mezcla funcional + fuerza (intensidad media)
-- NO incluir "Posparto" — no existe.
+**Selector de día:** Lun-Dom (7 días). Domingo muestra estado vacío ("No hay clases programadas. Disfruta del descanso 💤").
 
-**Datos mock:** Generar horarios realistas para cada día (07:00, 09:30, 12:00, 17:30, 19:00). Sábados solo mañana. El entrenador de todas las grupales es Luis. Plazas entre 10-14 max.
+**Cards de clase:** Tocar la zona de info abre detalle de clase (bottom sheet). Botón reservar funciona independientemente.
 
-### Pantalla 3: MI ENTRENAMIENTO (sustituye Trainer Plan)
+**Detalle de clase (ClassDetail):** Bottom sheet con descripción de la clase, info de sesión (hora, duración, entrenador, plazas), y botón reservar.
 
-**Cabecera del plan:**
-- Nombre del plan: "Fase de Fuerza"
-- Semana actual: "Semana 3 de 6"
-- Barra de progreso general (50% = semana 3/6)
-- Entrenador asignado: "Luis"
+**Tipos de clase:** OpTraining (alta), Functional (media), Strong (alta), Hybrid (media).
 
-**Sesión del día:**
-- Título: "Sesión A — Tren Superior + Core"
-- Lista de ejercicios, cada uno con:
-  - Nombre del ejercicio (realistas: Sentadilla Búlgara, Press Banca, Hip Thrust, etc.)
-  - Series × Reps: "4 × 10"
-  - Peso sugerido: "60kg"
-  - Notas del entrenador (si hay): "Controlar bajada 3s"
-  - Checkbox para marcar completado → al tocar: check con animación, texto se atenúa
-  - Input para registrar peso usado (aparece al marcar completado)
-- Barra de progreso de la sesión que se actualiza con cada ejercicio completado
+**Pull to refresh:** Simulado.
 
-**Datos mock:** 5-6 ejercicios realistas con pesos, series, reps y alguna nota.
+### Pantalla 3: MI ENTRENAMIENTO (src/pages/Training.jsx)
 
-### Pantalla 4: PERFIL
+**Enfoque: deportes de resistencia** (triatlón, running, ciclismo). NO ejercicios de gimnasio.
 
-**Cabecera:**
-- Avatar con iniciales "CF" (Carlos Fernández) en círculo con fondo Yellow Snap y texto Core Black
-- Nombre: "Carlos Fernández"
-- Subtítulo: "Cliente desde 2023"
+**Cabecera:** "Preparación Media Maratón — Fase de Carga", Semana 6 de 12, barra 50%.
 
-**Estadísticas (fila de 3 cards):**
-- Sesiones este mes: "12"
-- Bonos activos: "2"
-- Asistencia: "94%"
+**Métricas de sesión:** Badges de distancia (12 km), duración (~55 min), zona (Z3-Z4).
 
-**Menú de opciones (lista vertical):**
-- Mis Citas
-- Mi Entrenamiento
-- Nutrición
-- Progreso
-- Mis Bonos
-- Historial
-- Notificaciones
-- Configuración
-- Cada opción: icono a la izquierda, texto, chevron a la derecha
-- Al tocar: efecto ripple/press visual (no navegan a ningún sitio)
+**Sesión del día en 4 bloques:**
+- Calentamiento (icono flame, Orange Fun): trote Z1, movilidad, progresivos
+- Parte Principal (icono rayo, Yellow Snap): series umbral 5×1km
+- Vuelta a la calma (Trust Gray): trote suave, estiramientos
+- Fuerza complementaria (Human Gray, opcional): sentadilla, peso muerto, gemelo
 
-## Extras globales
+Cada ítem con checkbox funcional. Notas del entrenador en italic Orange Fun.
 
-- **Splash screen** con logo al abrir
-- **Transiciones suaves** entre pantallas (fade + translateY)
-- **Datos dummy realistas** con nombres de clases reales, servicios reales, profesionales reales
-- **100% mobile-first** — debe verse perfecto en iPhone/Android de 375px+
-- **Botones funcionales**: tocar reservar, marcar ejercicios, cambiar día, etc. cambian estado visual
-- **PWA**: manifest.json + meta tags apple-mobile-web-app para añadir a pantalla de inicio
-- **No hay login** — se abre directa al Home
+**Semana completa:** Mini-calendario con plan multideporte (descanso, series, natación, rodaje, fuerza, tirada larga, bici). Día activo con borde Yellow Snap. Sesión clave con badge "Clave" en Orange Fun.
+
+### Pantalla 4: PERFIL (src/pages/Profile.jsx)
+
+**Cabecera:** Avatar "CF" en Yellow Snap, nombre, "Cliente desde 2023".
+
+**Stats:** 3 mini-cards (Sesiones, Bonos activos, Asistencia).
+
+**Menú — TODOS los ítems son funcionales y abren bottom sheets:**
+- Mis Citas → Appointments.jsx
+- Mi Entrenamiento → navega a tab Entreno
+- Nutrición → NutricionSheet (en Home.jsx)
+- Progreso → Progress.jsx
+- Mis Bonos → Bonos.jsx
+- Historial → History.jsx
+- Notificaciones → Notifications.jsx
+- Configuración → Settings.jsx
+
+## Bottom Sheets (src/pages/)
+
+Todos los bottom sheets siguen el mismo patrón:
+- `position: fixed; inset: 0; z-index: 50`
+- Backdrop: `fixed inset-0` con opacity animada
+- Sheet: slide-up desde `translateY(100%)` a `translateY(0)`, 95dvh de altura
+- Drag indicator, botón cerrar (X), contenido scrollable
+- Animación de entrada con `requestAnimationFrame` (double rAF en Notifications)
+
+### Notifications.jsx
+- Lista de notificaciones con estados leída/no leída
+- Tocar alterna estado. "Marcar todo como leído" oculta badge en Home.
+
+### Progress.jsx
+- Resumen actividad (38 sesiones, 12.4 media, 94% asistencia)
+- Gráfico barras vertical (8 semanas, animado)
+- Volumen semanal km (barras horizontales)
+- Marcas personales (5K, 10K, media maratón)
+- Últimas sesiones
+
+### Bonos.jsx
+- Bonos activos con barras progreso, fechas, profesional, precio, estado pago
+- Bonos completados con opacity reducida
+- Resumen: totales, activos, invertido
+
+### Appointments.jsx
+- Tabs "Próximas" / "Pasadas"
+- Próximas con badge "Confirmada" verde + botón "Cancelar" en Red Pulse
+- Pasadas con opacity reducida, badge "Completada"
+
+### History.jsx
+- Selector de mes con flechas (Marzo / Febrero 2026)
+- Sesiones agrupadas por semana
+- Badge "Completada" verde / "Ausencia" rojo
+- Notas de PRs en italic Yellow Snap
+- Resumen del mes (sesiones, ausencias, % asistencia)
+
+### Settings.jsx
+- Toggles funcionales de notificaciones (switch pill animado)
+- Cuenta: idioma, unidades, zona horaria
+- Legal: privacidad, términos, licencias
+- Info app: logo, versión, copyright
+
+## Componentes compartidos (src/components/)
+
+- **TabBar.jsx**: Navegación inferior con haptic feedback
+- **SplashScreen.jsx**: Pantalla de carga inicial
+- **Onboarding.jsx**: 3 slides de bienvenida (primera vez)
+- **WhatsAppFAB.jsx**: Botón flotante WhatsApp con menú de 3 contactos + overlay para cerrar
+- **PullToRefresh.jsx**: Simulación pull-to-refresh con spinner (usado en Home y Classes)
+- **Skeleton.jsx**: Skeleton loading para transición entre tabs (300ms)
+- **ProgressBar.jsx**: Barra de progreso reutilizable
+
+## UX implementada
+
+- **Skeleton loading**: 300ms de skeletons al cambiar de tab
+- **Pull to refresh**: Simulado en Home y Classes con spinner Yellow Snap
+- **Haptic feedback**: scale + opacity en botones, cards y tabs
+- **Estado vacío**: Domingo en Clases muestra estado vacío
+- **Scroll contenido**: Body fijo, contenido scrollable con overscroll-behavior: contain
+- **Animaciones**: page-in (fade+translate), card-in (stagger), check-pop, spin para refresh
+- **IMPORTANTE CSS**: La animación page-in usa `transform: none` (NO `translateY(0)`) en el estado final para no crear containing block que rompa `position: fixed` de los modales
+
+## Datos de contacto reales
+
+- **Luis**: 613 01 51 02 — wa.me/34613015102
+- **Andreu**: 606 72 82 57 — wa.me/34606728257
+- **Pau**: 613 00 79 15 — wa.me/34613007915
+- **Email**: info@optimalbarbera.com
 
 ## Profesionales del centro (datos reales)
 
@@ -196,13 +229,15 @@ El símbolo es un círculo superpuesto a un cuadrado con un arco de separación.
 ## Convenciones de código
 
 - Componentes funcionales con hooks
-- Un solo archivo App.jsx con todo (demo simple) O componentes separados por pantalla — lo que sea más limpio
-- Tailwind para todos los estilos, cero estilos inline
-- Animaciones con CSS (keyframes en index.css) o transiciones de Tailwind
-- Mobile-first: diseñar para 375px, que escale bien hasta 428px (iPhone Pro Max)
+- Componentes separados por pantalla en `src/pages/`, compartidos en `src/components/`
+- Bottom sheets: componente propio en `src/pages/`, patrón fixed+overlay+slide-up
+- Tailwind para todos los estilos. Estilos inline solo para valores dinámicos (transform, delays)
+- Animaciones con CSS keyframes en index.css
+- Mobile-first: diseñar para 375px, que escale bien hasta 428px
 - Colores configurados en tailwind.config.js con los nombres de la marca
+- Todos los modales/bottom sheets DEBEN usar `position: fixed` (nunca `absolute` para el contenedor principal ni el backdrop)
 
-## Estructura de archivos esperada
+## Estructura de archivos
 
 ```
 optimal-app-demo/
@@ -222,10 +257,20 @@ optimal-app-demo/
 │   │   ├── Home.jsx
 │   │   ├── Classes.jsx
 │   │   ├── Training.jsx
-│   │   └── Profile.jsx
+│   │   ├── Profile.jsx
+│   │   ├── Progress.jsx
+│   │   ├── Bonos.jsx
+│   │   ├── Appointments.jsx
+│   │   ├── Notifications.jsx
+│   │   ├── History.jsx
+│   │   └── Settings.jsx
 │   └── components/
 │       ├── TabBar.jsx
 │       ├── SplashScreen.jsx
+│       ├── Onboarding.jsx
+│       ├── WhatsAppFAB.jsx
+│       ├── PullToRefresh.jsx
+│       ├── Skeleton.jsx
 │       └── ProgressBar.jsx
 ├── index.html
 ├── package.json
