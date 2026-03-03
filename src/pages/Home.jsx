@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Progress from './Progress'
 import Notifications from './Notifications'
+import PullToRefresh from '../components/PullToRefresh'
 
 function getFormattedDate() {
   const d = new Date()
@@ -175,6 +176,7 @@ export default function Home({ onNavigate }) {
   }, [])
 
   return (
+    <PullToRefresh>
     <div className="min-h-full pb-28">
       {/* Header */}
       <header className="sticky top-0 z-30 flex items-start justify-between bg-core-black px-5 pb-4 pt-4">
@@ -383,5 +385,6 @@ export default function Home({ onNavigate }) {
         />
       )}
     </div>
+    </PullToRefresh>
   )
 }

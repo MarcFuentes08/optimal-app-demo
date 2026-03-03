@@ -67,8 +67,8 @@ export default function TabBar({ activeTab, onTabChange }) {
               onPointerDown={() => setPressed(tab.id)}
               onPointerUp={() => setPressed(null)}
               onPointerLeave={() => setPressed(null)}
-              className={`flex flex-col items-center gap-0.5 px-4 py-1 transition-transform duration-100 ${
-                pressed === tab.id ? 'scale-[0.92]' : 'scale-100'
+              className={`flex flex-col items-center gap-0.5 px-4 py-1 transition-all duration-100 ${
+                pressed === tab.id ? 'scale-[0.85] opacity-60' : 'scale-100 opacity-100'
               } ${isActive ? 'text-yellow-snap' : 'text-human-gray'}`}
             >
               {tab.icon}

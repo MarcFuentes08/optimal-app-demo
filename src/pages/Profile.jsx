@@ -4,6 +4,7 @@ import Bonos from './Bonos'
 import Appointments from './Appointments'
 import Notifications from './Notifications'
 import History from './History'
+import Settings from './Settings'
 
 const stats = [
   { value: '12', label: 'Sesiones' },
@@ -85,6 +86,7 @@ const menuItems = [
   },
   {
     label: 'Configuración',
+    action: 'settings',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
         <circle cx="12" cy="12" r="3" />
@@ -106,6 +108,7 @@ export default function Profile() {
   const [showAppointments, setShowAppointments] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showHistory, setShowHistory] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
 
   return (
     <div className="min-h-full pb-28">
@@ -140,6 +143,7 @@ export default function Profile() {
                 if (item.action === 'appointments') setShowAppointments(true)
                 if (item.action === 'notifications') setShowNotifications(true)
                 if (item.action === 'history') setShowHistory(true)
+                if (item.action === 'settings') setShowSettings(true)
               }}
               className={`flex w-full items-center gap-4 px-4 py-3.5 active:scale-[0.98] active:bg-white/5 transition-all ${
                 i !== menuItems.length - 1 ? 'border-b border-white/5' : ''
@@ -175,6 +179,9 @@ export default function Profile() {
 
       {/* History bottom sheet */}
       {showHistory && <History onClose={() => setShowHistory(false)} />}
+
+      {/* Settings bottom sheet */}
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   )
 }

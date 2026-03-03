@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import PullToRefresh from '../components/PullToRefresh'
 
 const schedule = {
   1: [
@@ -51,7 +52,7 @@ const descriptions = {
   Hybrid: 'Lo mejor de dos mundos: combina trabajo funcional con bloques de fuerza. Versátil y adaptable a cualquier nivel.',
 }
 
-const dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+const dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 
 function getWeekDays() {
   const today = new Date()
@@ -59,7 +60,7 @@ function getWeekDays() {
   const monday = new Date(today)
   monday.setDate(today.getDate() - ((dow === 0 ? 7 : dow) - 1))
 
-  return Array.from({ length: 6 }, (_, i) => {
+  return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday)
     d.setDate(monday.getDate() + i)
     return {
@@ -232,6 +233,7 @@ export default function Classes() {
   }
 
   return (
+    <PullToRefresh>
     <div className="min-h-full pb-28">
       {/* Header */}
       <header className="px-5 pt-6">
@@ -265,6 +267,21 @@ export default function Classes() {
           )
         })}
       </div>
+
+      {/* Empty state */}
+      {classes.length === 0 && (
+        <div className="mt-16 flex flex-col items-center px-5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" className="h-20 w-20 text-human-gray/30">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M3 9h18" />
+            <path d="M8 2v4" />
+            <path d="M16 2v4" />
+            <line x1="9" y1="14" x2="15" y2="14" />
+          </svg>
+          <p className="mt-4 text-lg font-semibold text-human-gray/50">No hay clases programadas</p>
+          <p className="mt-1 text-sm text-human-gray/30">Disfruta del descanso 💤</p>
+        </div>
+      )}
 
       {/* Class list */}
       <div key={staggerKey} className="mt-5 flex flex-col gap-3 px-5">
@@ -337,5 +354,6 @@ export default function Classes() {
         />
       )}
     </div>
+    </PullToRefresh>
   )
 }
